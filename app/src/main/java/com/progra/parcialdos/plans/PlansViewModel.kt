@@ -8,7 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.progra.parcialdos.service.Util
+import com.progra.parcialdos.service.Until
 
 class CounterViewModel: ViewModel() {
 
@@ -17,7 +17,7 @@ class CounterViewModel: ViewModel() {
 
     fun increment(context: Context) {
         _cadena.value = ((_cadena.value?.toIntOrNull() ?:0) + 1).toString()
-        Util.sendNotificatión(context)
+        Until.sendNotificatión(context)
     }
 
 }
