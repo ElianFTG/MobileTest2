@@ -13,6 +13,7 @@ import kotlinx.serialization.encodeToString
 import java.net.URLDecoder
 import java.net.URLEncoder
 
+import com.progra.parcialdos.plans.PlanAdapter
 
 @Composable
 fun AppNavigation() {
@@ -28,7 +29,9 @@ fun AppNavigation() {
 
     ) {
 
-
+        composable(Screen.DollarScreen.route) {
+            PlanAdapter()
+        }
 
     }
 
