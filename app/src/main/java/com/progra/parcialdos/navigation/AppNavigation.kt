@@ -14,6 +14,7 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 
 import com.progra.parcialdos.plans.PlansUI
+import com.progra.parcialdos.dates.DatesUI
 
 @Composable
 fun AppNavigation() {
@@ -21,7 +22,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.PlansScreen.route,
+        startDestination = Screen.DatesScreen.route,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
@@ -31,6 +32,10 @@ fun AppNavigation() {
 
         composable(Screen.PlansScreen.route) {
             PlansUI()
+        }
+
+        composable(Screen.DatesScreen.route) {
+            DatesUI()
         }
 
     }

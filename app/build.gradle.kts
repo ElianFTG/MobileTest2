@@ -40,6 +40,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
 }
 
 dependencies {
@@ -73,7 +76,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.test)
     kaptAndroidTest(libs.hilt.compiler)
-
+    implementation("org.osmdroid:osmdroid-android:6.1.16") //map
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("androidx.cardview:cardview:1.0.0")
     //serialization
