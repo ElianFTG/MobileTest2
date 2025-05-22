@@ -3,10 +3,12 @@ package com.progra.parcialdos.dates
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -16,6 +18,9 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.events.MapEventsReceiver
 
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -34,11 +39,12 @@ fun DatesUI(viewModel: DatesViewModel = viewModel()) {
         .padding(16.dp)
         .fillMaxSize()
     ) {
-
+        Spacer(modifier = Modifier.height(10.dp))
+        Text("Donde enviaremos tu SIM")
         OutlinedTextField(
             value = viewModel.field1,
             onValueChange = { viewModel.onField1Changed(it) },
-            label = { Text("Campo 1 (editable)") },
+            label = { Text("Teléfono de referencia") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -47,9 +53,17 @@ fun DatesUI(viewModel: DatesViewModel = viewModel()) {
         OutlinedTextField(
             value = viewModel.field2,
             onValueChange = {},
-            label = { Text("Campo 2 (autocompletado)") },
+            label = { Text("Latitud") },
             enabled = false,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = Color.White,
+                disabledLabelColor = Color.LightGray,
+                disabledBorderColor = Color.DarkGray,
+                disabledLeadingIconColor = Color.LightGray,
+                disabledTrailingIconColor = Color.LightGray,
+                disabledPlaceholderColor = Color.LightGray
+            )
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -57,38 +71,74 @@ fun DatesUI(viewModel: DatesViewModel = viewModel()) {
         OutlinedTextField(
             value = viewModel.field3,
             onValueChange = {},
-            label = { Text("Campo 3 (autocompletado)") },
+            label = { Text("Longitud") },
             enabled = false,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = Color.White,
+                disabledLabelColor = Color.LightGray,
+                disabledBorderColor = Color.DarkGray,
+                disabledLeadingIconColor = Color.LightGray,
+                disabledTrailingIconColor = Color.LightGray,
+                disabledPlaceholderColor = Color.LightGray
+            )
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Text("Ubicación estimada", style = MaterialTheme.typography.titleMedium)
 
         // Aquí mostramos el mapa
-        AndroidView(
-            factory = {
-                MapView(it).apply {
-                    setMultiTouchControls(true)
-                    controller.setZoom(14.5)
-                }
-            },
+        // ✅ Mapa encerrado y limitado
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp),
-            update = { mapView ->
-                val geoPoint = GeoPoint(viewModel.latitude, viewModel.longitude)
-                mapView.controller.setCenter(geoPoint)
+                .height(550.dp)
+                .clip(MaterialTheme.shapes.medium)
+        ) {
+            AndroidView(
+                factory = { ctx ->
+                    MapView(ctx).apply {
+                        setMultiTouchControls(true)
+                        controller.setZoom(14.5)
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(MaterialTheme.shapes.medium),
+                update = { mapView ->
+                    val point = GeoPoint(viewModel.latitude, viewModel.longitude)
+                    mapView.controller.setCenter(point)
 
-                mapView.overlays.clear() // limpia marcadores anteriores
-                val marker = Marker(mapView)
-                marker.position = geoPoint
-                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                marker.title = "Ubicación"
-                mapView.overlays.add(marker)
-                mapView.invalidate()
-            }
-        )
+                    mapView.overlays.clear()
+
+                    val marker = Marker(mapView).apply {
+                        position = point
+                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                        title = "Marcador actual"
+                    }
+                    mapView.overlays.add(marker)
+
+                    val eventReceiver = object : MapEventsReceiver {
+                        override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                            p?.let {
+                                viewModel.updateCoordinates(it.latitude, it.longitude)
+                            }
+                            return true
+                        }
+
+                        override fun longPressHelper(p: GeoPoint?): Boolean = false
+                    }
+
+                    val eventsOverlay = MapEventsOverlay(eventReceiver)
+                    mapView.overlays.add(eventsOverlay)
+
+                    mapView.invalidate()
+                }
+            )
+        }
     }
 }

@@ -16,20 +16,22 @@ class DatesViewModel : ViewModel() {
     var field3 by mutableStateOf("")
         private set
 
-    // Coordenadas (opcional)
-    var latitude by mutableStateOf(40.4168)  // Ej: Madrid
-    var longitude by mutableStateOf(-3.7038)
+    var latitude by mutableStateOf(-17.382081453967093)
+        private set
+
+    var longitude by mutableStateOf(-66.15540213085374)
+        private set
 
     fun onField1Changed(newText: String) {
         field1 = newText
-        field2 = "Auto: ${newText.uppercase()}"
-        field3 = "Sugerencia: ${newText.reversed()}"
+        // opcional: puedes limpiar los campos 2 y 3 si se escribe texto manual
+    }
 
-        // Simular cambio de ubicación según entrada (opcional)
-        if (newText.lowercase() == "paris") {
-            latitude = 48.8566
-            longitude = 2.3522
-        }
+    fun updateCoordinates(lat: Double, lon: Double) {
+        latitude = lat
+        longitude = lon
+        field2 = lat.toString()
+        field3 = lon.toString()
     }
 
 }
