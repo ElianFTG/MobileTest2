@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.progra.parcialdos.navigation.Screen
+
 
 data class Plan(
     val name: String,
@@ -68,9 +72,9 @@ val plans = listOf(
         )
     )
 )
-@Preview(showBackground = true)
+
 @Composable
-fun HomeUI() {
+fun HomeUI(navController: NavHostController) {
     var currentIndex by remember { mutableStateOf(0) }
     val plan = plans[currentIndex]
 
@@ -132,7 +136,7 @@ fun HomeUI() {
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { /* Acción */ } , colors = ButtonDefaults.buttonColors(
+                    Button(onClick = { navController.navigate(Screen.DatesScreen.route) } , colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFf48b27),
                         contentColor = colorScheme.onPrimary
                     )) {
