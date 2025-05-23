@@ -21,7 +21,7 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.events.MapEventsReceiver
-
+import androidx.compose.material3.MaterialTheme.colorScheme
 
 @SuppressLint("UnsafeOptInUsageError")
 @Composable
@@ -40,7 +40,7 @@ fun DatesUI(viewModel: DatesViewModel = viewModel()) {
         .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        Text("Donde enviaremos tu SIM")
+        Text("Donde enviaremos tu SIM", color = colorScheme.primary)
         OutlinedTextField(
             value = viewModel.field1,
             onValueChange = { viewModel.onField1Changed(it) },
@@ -57,7 +57,7 @@ fun DatesUI(viewModel: DatesViewModel = viewModel()) {
             enabled = false,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = Color.White,
+                disabledTextColor = colorScheme.primary,
                 disabledLabelColor = Color.LightGray,
                 disabledBorderColor = Color.DarkGray,
                 disabledLeadingIconColor = Color.LightGray,
@@ -75,7 +75,7 @@ fun DatesUI(viewModel: DatesViewModel = viewModel()) {
             enabled = false,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = Color.White,
+                disabledTextColor = colorScheme.primary,
                 disabledLabelColor = Color.LightGray,
                 disabledBorderColor = Color.DarkGray,
                 disabledLeadingIconColor = Color.LightGray,
@@ -87,8 +87,6 @@ fun DatesUI(viewModel: DatesViewModel = viewModel()) {
 
         Text("Ubicación estimada", style = MaterialTheme.typography.titleMedium)
 
-        // Aquí mostramos el mapa
-        // ✅ Mapa encerrado y limitado
         Box(
             modifier = Modifier
                 .fillMaxWidth()
