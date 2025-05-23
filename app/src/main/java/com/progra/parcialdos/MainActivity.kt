@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.progra.parcialdos.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
+import com.progra.parcialdos.ui.theme.ParcialdossssTheme
 
 
 @AndroidEntryPoint
@@ -16,7 +17,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppNavigation()
+            ParcialdossssTheme {
+                AppNavigation()
+            }
+
         }
     }
 }
